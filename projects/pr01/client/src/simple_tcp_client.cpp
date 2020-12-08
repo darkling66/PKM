@@ -41,15 +41,22 @@ int main(int argc, char* argv[])
 	char msg[256] = "";
 	printf("%s", "Enter msg:");
 	//fgets(msg, sizeof(msg), stdin);
+	//printf("ALERT");
 	scanf("%[^\n]s", msg);
-	int sc = send(client_socket, msg, sizeof(msg), 0);
+	//printf("point 0");
+	int sc;
+	sc = send(client_socket, msg, sizeof(msg), 0);
 	if (sc <= 0) {
 		char err_msg[128] = "";
 		sprintf(err_msg, "Can't send data to the server %s:%d", host, port);
 		error_msg(err_msg);
 		return -1;
 	}
-
+	char buffer[512] = "";
+	int rc = recv(client_socket, buffer, sizeof(buffer), 0);
+	if (rc > 0) {
+		printf("Message :%s\n", buffer);
+	}
 	close_socket(client_socket);
 
 	return 0;
@@ -57,5 +64,5 @@ int main(int argc, char* argv[])
 
 void exit_handler()
 {
-	close_socket(client_socket);
+	closesocket(client_socket);
 }

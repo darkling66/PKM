@@ -4,6 +4,8 @@ void exit_handler();
 
 SOCKET server_socket;
 
+
+
 int main(int argc, char *argv[]) {
     atexit(common_exit_handler);
     atexit(exit_handler);

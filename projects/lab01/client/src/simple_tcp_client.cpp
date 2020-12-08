@@ -11,13 +11,13 @@ int main(int argc, char* argv[])
 	char host[128] = "";
 	bool parse_cmd_result = parse_cmd(argc, argv, host, &port);
 
-	if (!parse_cmd_result )//|| !host || !strlen(host))
+	if (!parse_cmd_result || !host || !strlen(host))
 	{
 		printf("Invalid host or port. Usage %s -h host -p port\n", argv[0]);
 		return -1;
 	}
 
-    common_init_handler ();
+    common_init_handler();
 
 	client_socket = socket(AF_INET, SOCK_STREAM, IPPROTO_TCP);
 	if (client_socket <= 0) {
@@ -25,7 +25,7 @@ int main(int argc, char* argv[])
 		return -1;
 	}
 
-	struct sockaddr_in server_addr{};
+	struct sockaddr_in server_addr;
 	init_inet_address(&server_addr, host, port);
 
 	//Connect to the server
@@ -38,16 +38,19 @@ int main(int argc, char* argv[])
 
 	printf("Connection to the server %s:%d success\n", host, port);
 
-    char msg[256] = "";
-    printf("%s", "Enter message:");
-    scanf("%[^\n]s", msg);
-    int sc = send(client_socket, msg, sizeof(msg), 0);
-    if (sc <= 0) {
-        char err_msg[128] = "";
-        sprintf(err_msg, "Can't send data to the server %s:%d", host, port);
-        error_msg(err_msg);
-        return -1;
-    }
+	char msg[256] = "";
+	printf("%s", "Enter msg:");
+	//fgets(msg, sizeof(msg), stdin);
+	scanf("%[^\n]s", msg);
+	int sc = send(client_socket, msg, sizeof(msg), 0);
+	if (sc <= 0) {
+		char err_msg[128] = "";
+		sprintf(err_msg, "Can't send data to the server %s:%d", host, port);
+		error_msg(err_msg);
+		return -1;
+	}
+
+	close_socket(client_socket);
 
 	return 0;
 }

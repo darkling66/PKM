@@ -1,5 +1,5 @@
 #include "single_thread_tcp_server.h"
-
+#pragma comment(lib,"ws2_32.lib").
 void exit_handler();
 
 SOCKET server_socket;
